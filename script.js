@@ -4,7 +4,7 @@ console.log("Minutes: "+minutes.innerHTML);
 let seconds = document.getElementById('seconds');
 console.log("Seconds: "+seconds.innerHTML);
 //Testing purpose:
-minutes.innerText = 5;
+// minutes.innerText = 5;
 //Make 'Start' as 'Reset' after clicking start and vice-versa
 //Make 'Pause' as 'Resume' after clicking 'Pause' and vice-versa
 const startButton = document.getElementById('start-button');
@@ -19,15 +19,15 @@ const resultBox = document.getElementById('result-box')
 console.log(resultBox);
 
 //Setting up work time in seconds
-const initialWorkTimeSeconds = 300;
+const initialWorkTimeSeconds = 1500;
 const initialWorkTimeMinutes = initialWorkTimeSeconds/60;
 
 //Setting up short break time in seconds
-const initialShortBreakTimeSeconds = 120;
+const initialShortBreakTimeSeconds = 300;
 const initialShortBreakTimeMinutes = initialWorkTimeSeconds/60;
 
 //Setting up long break time in seconds
-const initialLongBreakTimeSeconds = 180;
+const initialLongBreakTimeSeconds = 600;
 const initialLongBreakTimeMinutes = initialLongBreakTimeSeconds/60;
 
 //Setting up mode ('work','shortBreak','longBreak','breakAvailable')
@@ -55,7 +55,7 @@ let longBreakTimeChangerFunc;
 startButton.addEventListener('click',function(){
     console.log("Seconds working: "+workTimeSeconds);
     if(startButton.innerText=='Start'){
-        workTimeChangerFunc=setInterval(workTimeChanger,100);
+        workTimeChangerFunc=setInterval(workTimeChanger,1000);
     }else if(startButton.innerText=='Restart'){
         clearInterval(workTimeChangerFunc);
         resetWorkTime();
@@ -76,7 +76,7 @@ pauseButton.addEventListener('click',function(){
                 // if(startButton.innerText=='Start'){
                 //     startButtonNameChanger();
                 // }
-                workTimeChangerFunc=setInterval(workTimeChanger,100);
+                workTimeChangerFunc=setInterval(workTimeChanger,1000);
             }
             pauseButtonNameChanger();
         }
@@ -88,7 +88,7 @@ pauseButton.addEventListener('click',function(){
             // if(startButton.innerText=='Start'){
             //     startButtonNameChanger();
             // }
-            shortBreakTimeChangerFunc=setInterval(shortBreakTimeChanger,100);
+            shortBreakTimeChangerFunc=setInterval(shortBreakTimeChanger,1000);
         }
         pauseButtonNameChanger();
     }else if(mode == 'longBreak'){
@@ -99,7 +99,7 @@ pauseButton.addEventListener('click',function(){
             // if(startButton.innerText=='Start'){
             //     startButtonNameChanger();
             // }
-            longBreakTimeChangerFunc=setInterval(longBreakTimeChanger,100);
+            longBreakTimeChangerFunc=setInterval(longBreakTimeChanger,1000);
         }
         pauseButtonNameChanger();
     }
@@ -108,14 +108,14 @@ pauseButton.addEventListener('click',function(){
 shortBreakButton.addEventListener('click',function(){
     if(mode=='breakAvailable'){
         mode='shortBreak';
-        shortBreakTimeChangerFunc = setInterval(shortBreakTimeChanger,100);
+        shortBreakTimeChangerFunc = setInterval(shortBreakTimeChanger,1000);
     }
 });
 
 longBreakButton.addEventListener('click',function(){
     if(mode=='breakAvailable'){
         mode='longBreak';
-        longBreakTimeChangerFunc = setInterval(longBreakTimeChanger,100);
+        longBreakTimeChangerFunc = setInterval(longBreakTimeChanger,1000);
     }
 });
 
@@ -145,6 +145,8 @@ function workTimeChanger(){
         resultBox.innerText = 'Take a break.Click \'Short break\' or \'Long break\'';
         mode = 'breakAvailable';
         resetShortBreakTime();
+        resetLongBreakTime();
+        playAudio();
         return;
     }
     workTimeSeconds-=1;
@@ -179,6 +181,7 @@ function shortBreakTimeChanger(){
         mode = 'work';
         resetWorkTime();
         updateMinutesAndSeconds();
+        playAudio();
         return;
     }
     mode = 'shortBreak';
@@ -196,6 +199,7 @@ function longBreakTimeChanger(){
         mode = 'work';
         resetWorkTime();
         updateMinutesAndSeconds();
+        playAudio();
         return;
     }
     mode = 'longBreak';
@@ -223,4 +227,9 @@ function resetLongBreakTime(){
     longBreakTimeMinutes = initialLongBreakTimeMinutes;
     startButton.innerText = 'Start';
     pauseButton.innerText = 'Pause';
+}
+
+function playAudio(){
+    let audio = new Audio('sounds/ride.wav');
+    audio.play();
 }
